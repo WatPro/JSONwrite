@@ -6,17 +6,17 @@ var url = ScriptApp.getService().getUrl();
 function onOpen() {
     SpreadsheetApp.getUi()
         .createMenu('MongoDB')
-        .addItem('Export to MongoDB', 'downloadLink')
+        .addItem('Export', 'Links')
         .addToUi();
 }
  
-function downloadLink() {
+function Links() {
     var html = HtmlService
         .createTemplateFromFile('index').evaluate()
         .setWidth(200)
-        .setHeight(50);
+        .setHeight(80);
     SpreadsheetApp.getUi() 
-        .showModalDialog(html, 'Click the link below ');
+        .showModalDialog(html, 'Click the links below ');
 }
 
 function doGet(e) {
@@ -39,9 +39,12 @@ function doGet(e) {
     }
     var output = ContentService.
         createTextOutput(jsontext).
-        setMimeType(ContentService.MimeType.TEXT).
-        downloadAsFile(sheetname+".json"); 
-    return output; 
+        setMimeType(ContentService.MimeType.TEXT); 
+    if( e.parameter.hasOwnProperty("download") ) {
+        return output.downloadAsFile(sheetname+".json"); 
+    } else {
+        return output; 
+    }
 }
 
 function sheet2jsontext(sheet) {
