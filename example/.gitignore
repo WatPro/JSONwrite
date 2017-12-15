@@ -2,3 +2,4 @@ __pycache__/
 *.class
 *.jar
 *.zip
+*.json

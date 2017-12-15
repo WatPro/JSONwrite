@@ -17,7 +17,7 @@ from io import StringIO
 ########## Import the testing target       ##########
 import BirthdayCount
 from BirthdayCount import BirthdayCalculation as BC, UserInterface as UI
-
+from TestDB import collection 
 
 class TestBirthdayCalculation(unittest.TestCase):
 
@@ -31,108 +31,20 @@ class TestBirthdayCalculation(unittest.TestCase):
             )
             self.assertEqual(
                 BC.calculator(data['input']['DOB_month'],data['input']['DOB_day']), 
-                data['expect']['ans']
+                data['expect']['answer']
             ) 
 
     def test_calculator(self):
-        data = [
+        for doc in collection.find(
             {
-                'premise':{
-                    'today_year': 2017,
-                    'today_month': 11, 
-                    'today_day': 15
-                }, 
-                'input':{
-                    'DOB_month': 11, 
-                    'DOB_day': 15
-                }, 
-                'expect':{
-                    'ans': 0
-                }
-            }, {
-                'premise':{
-                    'today_year': 2017,
-                    'today_month': 11, 
-                    'today_day': 15
-                }, 
-                'input':{
-                    'DOB_month': 11, 
-                    'DOB_day': 16
-                }, 
-                'expect':{
-                    'ans': 1
-                }
-            }, {
-                'premise':{
-                    'today_year': 2017,
-                    'today_month': 11, 
-                    'today_day': 15
-                }, 
-                'input':{
-                    'DOB_month': 11, 
-                    'DOB_day': 17
-                }, 
-                'expect':{
-                    'ans': 2
-                }
-            }, {
-                'premise':{
-                    'today_year': 2017,
-                    'today_month': 12, 
-                    'today_day': 19
-                }, 
-                'input':{
-                    'DOB_month': 12, 
-                    'DOB_day': 19
-                }, 
-                'expect':{
-                    'ans': 0
-                }
-            }, {
-                'premise':{
-                    'today_year': 2017,
-                    'today_month': 12, 
-                    'today_day': 19
-                }, 
-                'input':{
-                    'DOB_month': 12, 
-                    'DOB_day': 26
-                }, 
-                'expect':{
-                    'ans': 7
-                }
-            }, {
-                'premise':{
-                    'today_year': 2017,
-                    'today_month': 12, 
-                    'today_day': 19
-                }, 
-                'input':{
-                    'DOB_month': 1, 
-                    'DOB_day': 1
-                }, 
-                'expect':{
-                    'ans': 13
-                }
-            }, {
-                'premise':{
-                    'today_year': 2017,
-                    'today_month': 12, 
-                    'today_day': 19
-                }, 
-                'input':{
-                    'DOB_month': 2, 
-                    'DOB_day': 1
-                }, 
-                'expect':{
-                    'ans': 44
-                }
-            }
-        ]
-        for each in data: 
+                "version":"v0.1", 
+                "module":"BirthdayCount",
+                "class":"BirthdayCalculation",
+                "method":"calculator"
+            },
+            {"_id":0,"premise":1,"input":1,"expect":1}):
             with self.subTest('test_calculator'):
-                self.__test_calculator(each)
-    
+                self.__test_calculator(doc)
 
 class TestUserInterface(unittest.TestCase):
     
