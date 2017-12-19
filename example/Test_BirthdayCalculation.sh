@@ -23,7 +23,20 @@ OBJENESIS_URL='https://bintray.com/easymock/distributions/download_file?file_pat
 OBJENESIS_ZIP=${OBJENESIS_URL##*=}
 OBJENESIS_ZPATH='objenesis-2.6/objenesis-2.6.jar'
 OBJENESIS_JAR=${OBJENESIS_ZPATH##*/}
+################################################################################
+#MongoDB Java Driver                                                           #
+#http://mongodb.github.io/mongo-java-driver/                                   #
+################################################################################
+MONGO_URL=http://search.maven.org/remotecontent?filepath=org/mongodb/mongodb-driver/3.6.0/mongodb-driver-3.6.0.jar
+MONGO_JAR=${MONGO_URL##*/}
+BSON_URL=http://search.maven.org/remotecontent?filepath=org/mongodb/bson/3.6.0/bson-3.6.0.jar
+BSON_JAR=${BSON_URL##*/}
+MONGO_CORE_URL=http://search.maven.org/remotecontent?filepath=org/mongodb/mongodb-driver-core/3.6.0/mongodb-driver-core-3.6.0.jar
+MONGO_CORE_JAR=${MONGO_CORE_URL##*/}
 
+################################################################################
+#Download JUnit and its dependencies                                           #
+################################################################################
 if [ ! -e "$JUNIT4_JAR" ] 
 then
     curl "$JUNIT4_URL" --output "$JUNIT4_JAR"
@@ -52,11 +65,29 @@ then
     rm --force "$OBJENESIS_ZIP"
 fi
 
+################################################################################
+#Download MongoDB Java Driver and its dependencies                             #
+################################################################################
+if [ ! -e "$MONGO_JAR" ]
+then
+    curl "$MONGO_URL" --output "$MONGO_JAR" 
+fi
+if [ ! -e "$BSON_JAR" ]
+then
+    curl "$BSON_URL" --output "$BSON_JAR" 
+fi
+if [ ! -e "$MONGO_CORE_JAR" ]
+then
+    curl "$MONGO_CORE_URL" --output "$MONGO_CORE_JAR" 
+fi
+
 javac BirthdayCalculation.java
 
 javac -classpath ".:./$JUNIT4_JAR:./$MOCKITO_JAR" Test_BirthdayCalculation.java
 
+javac -classpath ".:./$MONGO_JAR:./$BSON_JAR:./$MONGO_CORE_JAR" TestCollection.java
+
 java -classpath ".:./$JUNIT4_JAR:./$HARMCREST_JAR:./$OBJENESIS_JAR:./$BYTEBUDDY_JAR:./$MOCKITO_JAR" org.junit.runner.JUnitCore Test_BirthdayCalculation | grep --invert-match '^[[:blank:]]'
 
-
+java -classpath ".:./$MONGO_JAR:./$BSON_JAR:./$MONGO_CORE_JAR" TestCollection
 
