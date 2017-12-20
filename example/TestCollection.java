@@ -32,23 +32,17 @@ public class TestCollection {
     public TestCollection() { 
         this( "localhost", 27017, "testdb", "birthday" ); 
     }
-    public Iterator find() {
-        FindIterable findIterable = collection.find(); 
+    public MongoCursor<Document> find() {
+        FindIterable<Document> findIterable = collection.find(); 
         return findIterable.iterator();
     }
-    public Iterator find(Bson filter) {
-        FindIterable findIterable = collection.find(filter); 
+    public MongoCursor<Document> find(Bson filter) {
+        FindIterable<Document> findIterable = collection.find(filter); 
         return findIterable.iterator();
     }
     public static void main(String args[]) {
         TestCollection tc = new TestCollection(); 
-        Iterator iterator = tc.find( and(
-            eq("version", "v0.1"), 
-            eq("module","BirthdayCount"), 
-            eq("class","BirthdayCalculation"),
-            eq("method","calculator")
-            ));
-        iterator = tc.find(); 
+        Iterator<Document> iterator = tc.find(); 
         while( iterator.hasNext() ) {
             System.out.println(iterator.next()); 
         }

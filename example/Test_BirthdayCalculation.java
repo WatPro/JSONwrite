@@ -3,8 +3,9 @@
 import static org.junit.Assert.assertEquals;
 import java.util.Calendar; 
 import java.util.Date;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator; 
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,18 +13,40 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters; 
 import static org.mockito.Mockito.spy; 
 import static org.mockito.Mockito.when; 
+import org.bson.Document; 
+import org.bson.conversions.Bson;
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
 
 @RunWith(Parameterized.class)
 public class Test_BirthdayCalculation {
     @Parameters 
     public static Collection<Object[]> data(){
-        return Arrays.asList( 
-            new Object[][] {
-                {2017,11,15,11,15,0}, 
-                {2017,11,15,11,16,1}, 
-                {2017,11,15,11,17,2}
-            }
-        );
+        ArrayList<Object[]> list = new ArrayList<Object[]>();
+        Iterator<Document> iterator = new TestCollection().find( and(
+            eq("version", "v0.1"), 
+            eq("module","BirthdayCount"), 
+            eq("class","BirthdayCalculation"),
+            eq("method","calculator")
+            ));
+        while( iterator.hasNext() ) { 
+            Document document = iterator.next();
+            Document premise  = (Document) document.get("premise");
+            Document input    = (Document) document.get("input");
+            Document expect   = (Document) document.get("expect");
+            list.add(new Object[]{
+                premise.get("today_year"),
+                premise.get("today_month"),
+                premise.get("today_day"), 
+                input.get("DOB_month"),
+                input.get("DOB_day"),
+                expect.get("answer")
+            });
+        }
+        list.add(new Object[] {2017,11,15,11,15,0});
+        list.add(new Object[] {2017,11,15,11,16,1});
+        list.add(new Object[] {2017,11,15,11,17,2});
+        return list;
     }
     
     private Calendar today;

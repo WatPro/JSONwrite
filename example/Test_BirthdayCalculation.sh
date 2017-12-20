@@ -83,11 +83,13 @@ fi
 
 javac BirthdayCalculation.java
 
-javac -classpath ".:./$JUNIT4_JAR:./$MOCKITO_JAR" Test_BirthdayCalculation.java
+CLASSPATH="."
+CLASSPATH="$CLASSPATH:./$MONGO_JAR:./$BSON_JAR:./$MONGO_CORE_JAR"
+javac -classpath "$CLASSPATH" TestCollection.java
 
-javac -classpath ".:./$MONGO_JAR:./$BSON_JAR:./$MONGO_CORE_JAR" TestCollection.java
+CLASSPATH="$CLASSPATH:./$JUNIT4_JAR:./$MOCKITO_JAR"
+javac -classpath "$CLASSPATH" Test_BirthdayCalculation.java
 
-java -classpath ".:./$JUNIT4_JAR:./$HARMCREST_JAR:./$OBJENESIS_JAR:./$BYTEBUDDY_JAR:./$MOCKITO_JAR" org.junit.runner.JUnitCore Test_BirthdayCalculation | grep --invert-match '^[[:blank:]]'
-
-java -classpath ".:./$MONGO_JAR:./$BSON_JAR:./$MONGO_CORE_JAR" TestCollection
+CLASSPATH="$CLASSPATH:./$HARMCREST_JAR:./$OBJENESIS_JAR:./$BYTEBUDDY_JAR"
+java -classpath "$CLASSPATH" org.junit.runner.JUnitCore Test_BirthdayCalculation | grep --invert-match '^[[:blank:]]'
 
