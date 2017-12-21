@@ -8,6 +8,12 @@ JUNIT4_URL=http://search.maven.org/remotecontent?filepath=junit/junit/4.12/junit
 JUNIT4_JAR=${JUNIT4_URL##*/}
 HARMCREST_URL='http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar'
 HARMCREST_JAR=${HARMCREST_URL##*/}
+JUNIT5_API_URL=http://search.maven.org/remotecontent?filepath=org/junit/jupiter/junit-jupiter-api/5.0.2/junit-jupiter-api-5.0.2.jar
+JUNIT5_API_JAR=${JUNIT5_API_URL##*/}
+APIGUARDIAN_URL=http://search.maven.org/remotecontent?filepath=org/apiguardian/apiguardian-api/1.0.0/apiguardian-api-1.0.0.jar
+APIGUARDIAN_JAR=${APIGUARDIAN_URL##*/}
+JUNIT5_CONSOLE_URL=https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.0.2/junit-platform-console-standalone-1.0.2.jar
+JUNIT5_CONSOLE_JAR=${JUNIT5_CONSOLE_URL##*/}
 MOCKITO_URL='http://jcenter.bintray.com/org/mockito/mockito-core/2.12.0/:mockito-core-2.12.0.jar'
 ################################################################################
 #//1512184978444                                                               #
@@ -34,33 +40,28 @@ BSON_JAR=${BSON_URL##*/}
 MONGO_CORE_URL=http://search.maven.org/remotecontent?filepath=org/mongodb/mongodb-driver-core/3.6.0/mongodb-driver-core-3.6.0.jar
 MONGO_CORE_JAR=${MONGO_CORE_URL##*/}
 
+function check_download () {
+    if [ ! -e "$1" ]
+    then
+        curl --location "$2" --output "$3" 
+    fi
+}
+
 ################################################################################
 #Download JUnit and its dependencies                                           #
 ################################################################################
-if [ ! -e "$JUNIT4_JAR" ] 
-then
-    curl "$JUNIT4_URL" --output "$JUNIT4_JAR"
-fi
+check_download "$JUNIT4_JAR" "$JUNIT4_URL" "$JUNIT4_JAR"
+check_download "$HARMCREST_JAR" "$HARMCREST_URL" "$HARMCREST_JAR"
+#check_download "$JUNIT5_API_JAR" "$JUNIT5_API_URL" "$JUNIT5_API_JAR"
+#check_download "$APIGUARDIAN_JAR" "$APIGUARDIAN_URL" "$APIGUARDIAN_JAR"
+#check_download "$JUNIT5_CONSOLE_JAR" "$JUNIT5_CONSOLE_URL" "$JUNIT5_CONSOLE_JAR"
+check_download "$MOCKITO_JAR" "$MOCKITO_URL" "$MOCKITO_JAR"
+check_download "$BYTEBUDDY_JAR" "$BYTEBUDDY_URL" "$BYTEBUDDY_JAR" 
 
-if [ ! -e "$HARMCREST_JAR" ] 
-then
-    curl "$HARMCREST_URL" --output "$HARMCREST_JAR"
-fi
-
-if [ ! -e "$MOCKITO_JAR" ]
-then
-    curl --location "$MOCKITO_URL" --output "$MOCKITO_JAR"
-fi
-
-if [ ! -e "$BYTEBUDDY_JAR" ]
-then
-    curl --location "$BYTEBUDDY_URL" --output "$BYTEBUDDY_JAR"
-fi
-
-if [ ! -e "$OBJENESIS_JAR" ]
+check_download "$OBJENESIS_JAR" "$OBJENESIS_URL" "$OBJENESIS_ZIP"
+if [[ (! -e "$OBJENESIS_JAR") && (-e "$OBJENESIS_ZIP") ]]
 then
     yum --assumeyes install unzip
-    curl --location "$OBJENESIS_URL" -o "$OBJENESIS_ZIP"
     unzip -j "$OBJENESIS_ZIP" "$OBJENESIS_ZPATH"
     rm --force "$OBJENESIS_ZIP"
 fi
@@ -68,18 +69,9 @@ fi
 ################################################################################
 #Download MongoDB Java Driver and its dependencies                             #
 ################################################################################
-if [ ! -e "$MONGO_JAR" ]
-then
-    curl "$MONGO_URL" --output "$MONGO_JAR" 
-fi
-if [ ! -e "$BSON_JAR" ]
-then
-    curl "$BSON_URL" --output "$BSON_JAR" 
-fi
-if [ ! -e "$MONGO_CORE_JAR" ]
-then
-    curl "$MONGO_CORE_URL" --output "$MONGO_CORE_JAR" 
-fi
+check_download "$MONGO_JAR" "$MONGO_URL" "$MONGO_JAR"
+check_download "$BSON_JAR" "$BSON_URL" "$BSON_JAR"
+check_download "$MONGO_CORE_JAR" "$MONGO_CORE_URL" "$MONGO_CORE_JAR"
 
 javac BirthdayCalculation.java
 
