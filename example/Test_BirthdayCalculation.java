@@ -1,11 +1,10 @@
-
-
+ 
 import static org.junit.Assert.assertEquals;
 import java.util.Calendar; 
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator; 
+import java.lang.Iterable; 
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,14 +22,13 @@ public class Test_BirthdayCalculation {
     @Parameters 
     public static Collection<Object[]> data(){
         ArrayList<Object[]> list = new ArrayList<Object[]>();
-        Iterator<Document> iterator = new TestCollection().find( and(
+        Iterable<Document> iterable = new TestCollection().find( and(
             eq("version", "v0.1"), 
             eq("module","BirthdayCount"), 
             eq("class","BirthdayCalculation"),
             eq("method","calculator")
             ));
-        while( iterator.hasNext() ) { 
-            Document document = iterator.next();
+        for( Document document : iterable ) { 
             Document premise  = (Document) document.get("premise");
             Document input    = (Document) document.get("input");
             Document expect   = (Document) document.get("expect");
@@ -43,9 +41,6 @@ public class Test_BirthdayCalculation {
                 expect.get("answer")
             });
         }
-        list.add(new Object[] {2017,11,15,11,15,0});
-        list.add(new Object[] {2017,11,15,11,16,1});
-        list.add(new Object[] {2017,11,15,11,17,2});
         return list;
     }
     

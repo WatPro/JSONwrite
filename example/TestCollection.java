@@ -8,7 +8,7 @@ import com.mongodb.client.FindIterable;
 
 import org.bson.Document;
 import org.bson.conversions.Bson; 
-import java.util.Iterator; 
+import java.lang.Iterable; 
 import java.util.Arrays;
 import com.mongodb.Block;
 
@@ -32,19 +32,19 @@ public class TestCollection {
     public TestCollection() { 
         this( "localhost", 27017, "testdb", "birthday" ); 
     }
-    public MongoCursor<Document> find() {
+    public Iterable<Document> find() {
         FindIterable<Document> findIterable = collection.find(); 
-        return findIterable.iterator();
+        return findIterable;
     }
-    public MongoCursor<Document> find(Bson filter) {
+    public Iterable<Document> find(Bson filter) {
         FindIterable<Document> findIterable = collection.find(filter); 
-        return findIterable.iterator();
+        return findIterable;
     }
     public static void main(String args[]) {
         TestCollection tc = new TestCollection(); 
-        Iterator<Document> iterator = tc.find(); 
-        while( iterator.hasNext() ) {
-            System.out.println(iterator.next()); 
+        Iterable<Document> iterable = tc.find(); 
+        for( Document document : iterable ) {
+            System.out.println( document ); 
         }
     }
 }
