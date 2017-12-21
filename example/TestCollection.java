@@ -1,7 +1,4 @@
 import com.mongodb.MongoClient;
-// import com.mongodb.MongoClientURI;
-// import com.mongodb.ServerAddress;
-
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.FindIterable;
@@ -9,16 +6,10 @@ import com.mongodb.client.FindIterable;
 import org.bson.Document;
 import org.bson.conversions.Bson; 
 import java.lang.Iterable; 
-import java.util.Arrays;
-import com.mongodb.Block;
 
-import com.mongodb.client.MongoCursor;
-import static com.mongodb.client.model.Filters.*;
-import com.mongodb.client.result.DeleteResult;
-import static com.mongodb.client.model.Updates.*;
-import com.mongodb.client.result.UpdateResult;
-import java.util.ArrayList;
-import java.util.List;
+//import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
 
 public class TestCollection {
     private MongoClient mongoClient; 
